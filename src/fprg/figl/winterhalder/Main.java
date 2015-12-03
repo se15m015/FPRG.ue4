@@ -13,7 +13,7 @@ public class Main {
     }
 
     interface Idivide<A> {
-        Tupel<A> apply(ArrayList<A> input);
+        Tuple<A> apply(ArrayList<A> input);
     }
 
     interface Icombine<B> {
@@ -29,7 +29,7 @@ public class Main {
             add(44);
         }};
 
-        ArrayList<Integer> quicksorted = divideAndConquer(  (x) -> {(x.size() < 3)},
+        ArrayList<Integer> quicksorted = divideAndConquer(  (x) -> (x.size() < 3),
                                                             (x,y)->{
                                                                 ArrayList<Integer> result = new ArrayList<Integer>();
                                                                 if(x > y){
@@ -41,7 +41,11 @@ public class Main {
                                                                 }
                                                                 return result;
                                                             },
-                                                            inputInteger)
+                                                            (x)->{
+                                                                Tuple<Integer> result = new Tuple<Integer>();
+                                                                
+                                                            },
+                                                            inputInteger);
     }
 
     private static  <A,B> B divideAndConquer(Itivial<A> tivial, Isolve<A,B> solve,Idivide<A> divide,Icombine<B> combine, ArrayList<A> input){
@@ -54,15 +58,13 @@ public class Main {
         if(tivial.apply(input)) {
             return solve.apply(input);
         }else{
-            B left = divideAndConquerRec(tivial, solve, divide, combine, divide.apply(input).left);
-            B right = divideAndConquerRec(tivial, solve, divide, combine, divide.apply(input).right);
+            Tuple<A> tuples = divide.apply(input);
+            B left = divideAndConquerRec(tivial, solve, divide, combine, tuples.left);
+            B right = divideAndConquerRec(tivial, solve, divide, combine, tuples.right);
             return combine.apply(left, right);
         }
     }
 
-        public class Tupel<A> {
-            public ArrayList<A> left;
-            public ArrayList<A> right;
-    }
+
 }
 
