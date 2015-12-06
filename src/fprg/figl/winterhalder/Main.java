@@ -1,8 +1,6 @@
 package fprg.figl.winterhalder;
 
 import java.util.ArrayList;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Main {
 
@@ -111,8 +109,8 @@ public class Main {
                 },
                 (left, right) -> {
 
-                    //todo maybe improve concat
-                    ArrayList<Integer> newList = new ArrayList<Integer>(left);
+                    ArrayList<Integer> newList = new ArrayList<Integer>();
+                    newList.addAll(left);
                     newList.addAll(right);
                     return  newList;
                 },
