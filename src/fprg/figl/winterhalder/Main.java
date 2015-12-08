@@ -4,6 +4,10 @@ import java.util.ArrayList;
 
 public class Main {
 
+    interface  IPivot<A>{
+        boolean ShouldAddToList(A value, A pivot);
+    }
+
     interface Itivial<A> {
         boolean apply(ArrayList<A> input);
     }
@@ -84,17 +88,9 @@ public class Main {
                     result.left = new ArrayList<Integer>();
                     result.right = new ArrayList<Integer>();
 
-                    //todo write rec func to avoid the loop
-                    for (Integer item: x) {
-                        if (item < pivot) {
-                            result.left.add(item);
-                        }
-                        else if(item >= pivot) {
-                            result.right.add(item);
-                        }
-                    }
-
-
+                    result.left = divideList((fitem,fpivot) ->  fitem < fpivot,pivot,x);
+                    result.right = divideList((fitem,fpivot) ->  fitem >= fpivot,pivot,x);
+                    
                     if(result.left.size()==0) {
                         result.left.add(result.right.get(0));
                         result.right.remove(0);
@@ -122,9 +118,7 @@ public class Main {
     }
 
     private static <A, B> B divideAndConquer(Itivial<A> tivial, Isolve<A, B> solve, Idivide<A> divide, Icombine<B> combine, ArrayList<A> input) {
-
         return divideAndConquerRec(tivial, solve, divide, combine, input);
-
     }
 
     private static <A, B> B divideAndConquerRec(Itivial<A> tivial, Isolve<A, B> solve, Idivide<A> divide, Icombine<B> combine, ArrayList<A> input) {
@@ -138,6 +132,23 @@ public class Main {
         }
     }
 
+    private  static <A>  ArrayList<A> divideList(IPivot<A> func, A pivot, ArrayList<A> input)
+    {
+        ArrayList<A> output = new ArrayList<A>();
+        return divideListRec(func,pivot,input,output,0);
+    }
 
+    private  static <A>  ArrayList<A> divideListRec(IPivot<A> func, A pivot, ArrayList<A> input, ArrayList<A> output, Integer count)
+    {
+        if(count == input.size())
+            return output;
+
+        if(func.ShouldAddToList(input.get(count),pivot))
+        {
+            output.add(input.get(count));
+        }
+
+        return divideListRec(func,pivot,input,output,++count);
+    }
 }
 
